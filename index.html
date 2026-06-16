@@ -5,6 +5,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Gaegu&amp;family=Nanum+Pen+Script&amp;family=Noto+Sans+KR:wght@400;600;700&amp;family=Noto+Serif+KR:wght@500;700&amp;display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 :root{
   --paper:#FBF8F1; --paper-edge:#F1EBDD;
@@ -254,6 +255,12 @@ footer .btn{pointer-events:auto;box-shadow:0 4px 14px rgba(28,26,23,.1);}
       <div class="divider"></div>
       <span class="lab">이미지 투명도</span>
       <input type="range" id="sheetOpacity" min="5" max="100" step="5" value="40" style="width:80px;">
+      <div class="divider"></div>
+      <label class="btn" style="cursor:pointer;">
+        📂 파일 열기
+        <input type="file" id="sheetFileInput" accept=".jpg,.jpeg,.png,.pdf" style="display:none;">
+      </label>
+      <span id="sheetFileName" style="font-size:12px;color:var(--ink-soft);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
     </div>
   </div>
 
@@ -1161,8 +1168,84 @@ function initSheetCanvas(){
     sheetState.page++; sheetLoadPage();
   });
 
+  /* 파일 업로드 */
+  document.getElementById('sheetFileInput').addEventListener('change',function(e){
+    var file=e.target.files[0]; if(!file) return;
+    var name=file.name;
+    document.getElementById('sheetFileName').textContent=name;
+    /* 내장 시트 버튼 선택 해제 */
+    document.getElementById('sheetCat').querySelectorAll('button').forEach(function(b){b.classList.remove('sel');});
+    document.getElementById('sheetPrev').disabled=true;
+    document.getElementById('sheetNext').disabled=true;
+    document.getElementById('sheetPageInfo').textContent='';
+
+    if(file.type==='application/pdf' || name.toLowerCase().endsWith('.pdf')){
+      loadPdfFile(file);
+    } else {
+      /* 이미지(jpg/png) */
+      var reader=new FileReader();
+      reader.onload=function(ev){
+        var img=document.getElementById('sheet-img');
+        img.src=ev.target.result;
+        img.onload=function(){ sheetState.strokes=[]; sheetResizeCanvas(); sheetRedraw(); };
+        sheetState.userMode='image';
+      };
+      reader.readAsDataURL(file);
+    }
+    /* input 초기화 (같은 파일 재선택 허용) */
+    this.value='';
+  });
+
   /* 첫 이미지 로드 */
   sheetLoadPage();
+}
+
+/* PDF 렌더링 (PDF.js) */
+var pdfDoc=null, pdfPage=1, pdfTotal=1;
+function loadPdfFile(file){
+  if(typeof pdfjsLib==='undefined'){
+    alert('PDF.js 로드 중입니다. 잠시 후 다시 시도해 주세요.'); return;
+  }
+  pdfjsLib.GlobalWorkerOptions.workerSrc=
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    var typedArray=new Uint8Array(ev.target.result);
+    pdfjsLib.getDocument({data:typedArray}).promise.then(function(doc){
+      pdfDoc=doc; pdfPage=1; pdfTotal=doc.numPages;
+      sheetState.userMode='pdf';
+      document.getElementById('sheetPrev').disabled=false;
+      document.getElementById('sheetNext').disabled=false;
+      renderPdfPage(pdfPage);
+      /* 페이지 이동 버튼 PDF 모드 연결 */
+      document.getElementById('sheetPrev').onclick=function(){
+        if(pdfPage<=1) return; pdfPage--; renderPdfPage(pdfPage);
+      };
+      document.getElementById('sheetNext').onclick=function(){
+        if(pdfPage>=pdfTotal) return; pdfPage++; renderPdfPage(pdfPage);
+      };
+    }).catch(function(err){ alert('PDF 열기 실패: '+err.message); });
+  };
+  reader.readAsArrayBuffer(file);
+}
+function renderPdfPage(pageNum){
+  if(!pdfDoc) return;
+  pdfDoc.getPage(pageNum).then(function(page){
+    var wrap=document.getElementById('sheet-wrap');
+    var maxW=wrap.parentElement.offsetWidth-28;
+    var viewport=page.getViewport({scale:1});
+    var scale=maxW/viewport.width;
+    var scaledVP=page.getViewport({scale:scale});
+    /* PDF → 임시 캔버스 → img src */
+    var tmpC=document.createElement('canvas');
+    tmpC.width=scaledVP.width; tmpC.height=scaledVP.height;
+    page.render({canvasContext:tmpC.getContext('2d'),viewport:scaledVP}).promise.then(function(){
+      var img=document.getElementById('sheet-img');
+      img.src=tmpC.toDataURL('image/jpeg',0.92);
+      img.onload=function(){ sheetState.strokes=[]; sheetResizeCanvas(); sheetRedraw(); };
+      document.getElementById('sheetPageInfo').textContent=pageNum+' / '+pdfTotal;
+    });
+  });
 }
 
 /* ── 되돌리기 / 전체지우기 ── */
