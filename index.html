@@ -156,6 +156,12 @@ main{max-width:1200px;margin:0 auto;padding:16px 14px 100px;}
 
 .empty{display:flex;align-items:center;justify-content:center;color:var(--ink-soft);font-size:13px;text-align:center;padding:48px 16px;line-height:1.8;grid-column:1/-1;}
 
+/* ── 시트 연습 ── */
+#sheet-main{padding:14px;overflow-y:auto;}
+#sheet-wrap{position:relative;display:inline-block;max-width:100%;touch-action:none;}
+#sheet-img{display:block;max-width:100%;height:auto;border-radius:10px;border:1px solid var(--line);user-select:none;pointer-events:none;}
+#sheet-canvas{position:absolute;inset:0;width:100%;height:100%;border-radius:10px;cursor:crosshair;touch-action:none;}
+
 footer{position:fixed;bottom:0;left:0;right:0;z-index:20;display:flex;gap:7px;justify-content:center;padding:9px 14px calc(9px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--paper) 45%);pointer-events:none;}
 footer .btn{pointer-events:auto;box-shadow:0 4px 14px rgba(28,26,23,.1);}
 
@@ -174,6 +180,7 @@ footer .btn{pointer-events:auto;box-shadow:0 4px 14px rgba(28,26,23,.1);}
       <button class="tab" data-tab="char">글자 연습</button>
       <button class="tab" data-tab="line">선 긋기</button>
       <button class="tab on" data-tab="fisa">필사</button>
+      <button class="tab" data-tab="sheet">시트 연습</button>
     </div>
     <div class="spacer"></div>
     <div class="tbinner" style="padding:0;gap:7px;" id="pens">
@@ -227,6 +234,26 @@ footer .btn{pointer-events:auto;box-shadow:0 4px 14px rgba(28,26,23,.1);}
       <div class="divider"></div>
       <span class="lab">줄 수</span>
       <div class="num"><button id="lRowMinus">−</button><span id="lRowVal">5</span><button id="lRowPlus">+</button></div>
+    </div>
+  </div>
+
+  <!-- 시트 연습 툴바 -->
+  <div class="toolbar" id="tb-sheet" style="display:none;">
+    <div class="tbinner">
+      <span class="lab">시트</span>
+      <div class="seg" id="sheetCat">
+        <button data-cat="byeol" class="sel">별헤는밤</button>
+        <button data-cat="basics-a">펜글씨기초 A</button>
+        <button data-cat="basics-b">펜글씨기초 B</button>
+        <button data-cat="basics-c">펜글씨기초 C</button>
+      </div>
+      <div class="divider"></div>
+      <button class="btn" id="sheetPrev">← 이전</button>
+      <span id="sheetPageInfo" style="font-size:13px;font-weight:600;min-width:48px;text-align:center;">1 / 6</span>
+      <button class="btn" id="sheetNext">다음 →</button>
+      <div class="divider"></div>
+      <span class="lab">이미지 투명도</span>
+      <input type="range" id="sheetOpacity" min="5" max="100" step="5" value="40" style="width:80px;">
     </div>
   </div>
 
@@ -296,6 +323,16 @@ footer .btn{pointer-events:auto;box-shadow:0 4px 14px rgba(28,26,23,.1);}
 너는 나에게 나는 너에게
 잊혀지지 않는 하나의 눈짓이 되고 싶다.</div><div class="fq-source">— 김춘수, 〈꽃〉</div><div class="fq-nav"><button class="btn" id="prevQuote">← 이전</button><button class="btn primary" id="nextQuote">다음 →</button><button class="btn ghost" id="randQuote">🎲 랜덤</button></div></div></div>
     <div id="fisa-lines"><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">내가 그의 이름을 불러 주기 전에는</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">1줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">1줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">그는 다만</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">2줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">2줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">하나의 몸짓에 지나지 않았다.</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">3줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">3줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div style="height: 18px; margin-bottom: 6px; border-bottom: 1px dashed var(--paper-edge);"></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">내가 그의 이름을 불러 주었을 때</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">5줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">5줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">그는 나에게로 와서</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">6줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">6줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">꽃이 되었다.</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">7줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">7줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div style="height: 18px; margin-bottom: 6px; border-bottom: 1px dashed var(--paper-edge);"></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">내가 그의 이름을 불러 준 것처럼</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">9줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">9줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">나의 이 빛깔과 향기에 알맞는</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">10줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">10줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">누가 나의 이름을 불러다오.</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">11줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">11줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div style="height: 18px; margin-bottom: 6px; border-bottom: 1px dashed var(--paper-edge);"></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">그에게로 가서 나도</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">13줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">13줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">그의 꽃이 되고 싶다.</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">14줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">14줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div style="height: 18px; margin-bottom: 6px; border-bottom: 1px dashed var(--paper-edge);"></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">우리들은 모두</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">16줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">16줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">무엇이 되고 싶다.</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">17줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">17줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">너는 나에게 나는 너에게</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">18줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">18줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">잊혀지지 않는 하나의 눈짓이 되고 싶다.</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">19줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">19줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">31줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">33줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">35줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div></div>
+  </main>
+</div>
+
+<!-- 시트 연습 패널 -->
+<div class="panel" id="panel-sheet">
+  <main id="sheet-main">
+    <div id="sheet-wrap">
+      <img id="sheet-img" src="" alt="연습 시트" draggable="false">
+      <canvas id="sheet-canvas"></canvas>
+    </div>
   </main>
 </div>
 
@@ -417,6 +454,8 @@ document.querySelectorAll('.tab').forEach(function(t){
     document.getElementById('tb-char').style.display = curTab==='char'?'':'none';
     document.getElementById('tb-line').style.display = curTab==='line'?'':'none';
     document.getElementById('tb-fisa').style.display = curTab==='fisa'?'':'none';
+    document.getElementById('tb-sheet').style.display = curTab==='sheet'?'':'none';
+    if(curTab==='sheet') initSheetCanvas();
     if(curTab==='line' && strokeCanvases.length===0) buildLineExercise();
     /* 필사 탭으로 전환할 때 패널이 display:block 된 직후 layout 재실행 */
     if(curTab==='fisa' && fisaLines.length>0){
@@ -990,15 +1029,153 @@ document.getElementById('btnFisaApply').addEventListener('click',function(){
   if(!txt) return; buildFisa({text:txt,src:src||'직접 입력'});
 });
 
+/* ══════════════ 시트 연습 ══════════════ */
+var SHEETS = {
+  'byeol':    {label:'별헤는밤',    pages:6,  prefix:'byeol'},
+  'basics-a': {label:'펜글씨기초 A', pages:4, prefix:'basics-a'},
+  'basics-b': {label:'펜글씨기초 B', pages:4, prefix:'basics-b'},
+  'basics-c': {label:'펜글씨기초 C', pages:4, prefix:'basics-c'}
+};
+var sheetState = { cat:'byeol', page:1, strokes:[], cur:null, inited:false };
+
+function sheetImgSrc(){
+  var s=SHEETS[sheetState.cat];
+  return 'images/'+s.prefix+'-'+String(sheetState.page).padStart(2,'0')+'.jpg';
+}
+function sheetUpdateInfo(){
+  var s=SHEETS[sheetState.cat];
+  document.getElementById('sheetPageInfo').textContent = sheetState.page+' / '+s.pages;
+}
+function sheetLoadPage(){
+  var img=document.getElementById('sheet-img');
+  img.src=sheetImgSrc();
+  sheetState.strokes=[]; sheetState.cur=null;
+  img.onload=function(){ sheetResizeCanvas(); sheetRedraw(); };
+  sheetUpdateInfo();
+}
+function sheetResizeCanvas(){
+  var img=document.getElementById('sheet-img');
+  var cv=document.getElementById('sheet-canvas');
+  var r=dpr();
+  cv.width=img.offsetWidth*r; cv.height=img.offsetHeight*r;
+  cv.style.width=img.offsetWidth+'px'; cv.style.height=img.offsetHeight+'px';
+  sheetRedraw();
+}
+function sheetRedraw(){
+  var cv=document.getElementById('sheet-canvas');
+  var ctx=cv.getContext('2d');
+  var r=dpr(), W=cv.width/r, H=cv.height/r;
+  ctx.clearRect(0,0,cv.width,cv.height);
+  sheetState.strokes.forEach(function(st){ sheetDrawStroke(ctx,st,W,H); });
+  if(sheetState.cur) sheetDrawStroke(ctx,sheetState.cur,W,H);
+}
+function sheetDrawStroke(ctx,st,W,H){
+  if(st.pts.length<2) return;
+  ctx.save();
+  ctx.globalCompositeOperation = st.erase?'destination-out':'source-over';
+  ctx.strokeStyle=st.color; ctx.lineCap='round'; ctx.lineJoin='round';
+  var r=dpr();
+  ctx.scale(r,r);
+  for(var i=1;i<st.pts.length;i++){
+    var a=st.pts[i-1],b=st.pts[i],pr=(a.p+b.p)/2;
+    ctx.lineWidth=st.width*(st.erase?2.6:(0.55+0.9*pr));
+    ctx.beginPath(); ctx.moveTo(a.x*W,a.y*H);
+    ctx.quadraticCurveTo(a.x*W,a.y*H,(a.x+b.x)/2*W,(a.y+b.y)/2*H);
+    ctx.lineTo(b.x*W,b.y*H); ctx.stroke();
+  }
+  ctx.restore();
+}
+function sheetNorm(e){
+  var cv=document.getElementById('sheet-canvas');
+  var r=cv.getBoundingClientRect();
+  return {x:Math.min(1,Math.max(0,(e.clientX-r.left)/r.width)),
+          y:Math.min(1,Math.max(0,(e.clientY-r.top)/r.height)),
+          p:(e.pointerType==='pen'&&e.pressure>0)?e.pressure:0.5};
+}
+function sheetUndo(){
+  if(!sheetState.strokes.length) return;
+  sheetState.strokes.pop(); sheetRedraw();
+}
+function sheetClear(){ sheetState.strokes=[]; sheetState.cur=null; sheetRedraw(); }
+
+function initSheetCanvas(){
+  var cv=document.getElementById('sheet-canvas');
+  if(sheetState.inited){ sheetResizeCanvas(); return; }
+  sheetState.inited=true;
+
+  var startX=null, startY=null, drawDecided=false;
+  cv.addEventListener('pointerdown',function(e){
+    startX=e.clientX; startY=e.clientY;
+    drawDecided=(e.pointerType==='pen'||e.pointerType==='mouse');
+    if(drawDecided) cv.style.touchAction='none';
+    cv.setPointerCapture(e.pointerId);
+    sheetState.cur={color:state.color,width:state.width,erase:state.tool==='erase',pts:[sheetNorm(e)]};
+  });
+  cv.addEventListener('pointermove',function(e){
+    if(!sheetState.cur) return;
+    if(!drawDecided){
+      var dx=Math.abs(e.clientX-startX), dy=Math.abs(e.clientY-startY);
+      if(dx<4&&dy<4) return;
+      if(dy>dx*1.8){ sheetState.cur=null; cv.style.touchAction='pan-y'; return; }
+      drawDecided=true; cv.style.touchAction='none';
+    }
+    e.preventDefault();
+    var evs=e.getCoalescedEvents?e.getCoalescedEvents():[e];
+    for(var i=0;i<evs.length;i++) sheetState.cur.pts.push(sheetNorm(evs[i]));
+    sheetRedraw();
+  });
+  function sheetEnd(){
+    cv.style.touchAction='pan-y'; drawDecided=false;
+    if(!sheetState.cur) return;
+    var c=sheetState.cur; sheetState.cur=null;
+    if(c.pts.length===1){var p=c.pts[0];c.pts.push({x:p.x+.001,y:p.y+.001,p:p.p});}
+    sheetState.strokes.push(c); sheetRedraw();
+  }
+  cv.addEventListener('pointerup',sheetEnd);
+  cv.addEventListener('pointercancel',sheetEnd);
+
+  /* 이미지 투명도 */
+  document.getElementById('sheetOpacity').addEventListener('input',function(){
+    document.getElementById('sheet-img').style.opacity=this.value/100;
+  });
+  document.getElementById('sheet-img').style.opacity=
+    document.getElementById('sheetOpacity').value/100;
+
+  /* 카테고리 선택 */
+  document.getElementById('sheetCat').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    this.querySelectorAll('button').forEach(function(x){x.classList.remove('sel');});
+    b.classList.add('sel');
+    sheetState.cat=b.dataset.cat; sheetState.page=1;
+    sheetLoadPage();
+  });
+
+  /* 페이지 이동 */
+  document.getElementById('sheetPrev').addEventListener('click',function(){
+    if(sheetState.page<=1) return;
+    sheetState.page--; sheetLoadPage();
+  });
+  document.getElementById('sheetNext').addEventListener('click',function(){
+    var max=SHEETS[sheetState.cat].pages;
+    if(sheetState.page>=max) return;
+    sheetState.page++; sheetLoadPage();
+  });
+
+  /* 첫 이미지 로드 */
+  sheetLoadPage();
+}
+
 /* ── 되돌리기 / 전체지우기 ── */
 document.getElementById('undo').addEventListener('click',function(){
   if(curTab==='char'){ var c=undoStack.pop(); if(!c) return; c.strokes.pop(); c.redrawFront(); }
   else if(curTab==='line'){ var s=strokeUndoStack.pop(); if(!s) return; s.strokes.pop(); s.redrawFront(); }
+  else if(curTab==='sheet'){ sheetUndo(); }
   else { var l=fisaUndoStack.pop(); if(!l) return; l.strokes.pop(); l.redrawFront(); }
 });
 document.getElementById('clear').addEventListener('click',function(){
   if(curTab==='char'){ cells.forEach(function(c){ c.strokes=[]; c.redrawFront(); }); undoStack=[]; }
   else if(curTab==='line'){ strokeCanvases.forEach(function(c){ c.strokes=[]; c.redrawFront(); }); strokeUndoStack=[]; }
+  else if(curTab==='sheet'){ sheetClear(); }
   else { fisaLines.forEach(function(l){ l.strokes=[]; l.redrawFront(); }); fisaUndoStack=[]; }
 });
 
