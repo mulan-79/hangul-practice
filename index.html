@@ -740,28 +740,40 @@ function FisaLine(text, lineNum){
     var r=front.getBoundingClientRect();
     return {x:Math.min(1,Math.max(0,(e.clientX-r.left)/r.width)),y:Math.min(1,Math.max(0,(e.clientY-r.top)/r.height)),p:(e.pointerType==='pen'&&e.pressure>0)?e.pressure:0.5};
   }
-  var startY=null;
+  var startX=null, startY=null, drawDecided=false;
   front.addEventListener('pointerdown',function(e){
-    startY=e.clientY;
+    startX=e.clientX; startY=e.clientY;
+    /* 펜(애플펜슬 등)은 항상 쓰기, 손가락은 방향 판단 후 결정 */
+    drawDecided=(e.pointerType==='pen'||e.pointerType==='mouse');
+    if(drawDecided) front.style.touchAction='none';
     front.setPointerCapture(e.pointerId);
     self.cur={color:state.color,width:state.width,erase:state.tool==='erase',pts:[norm(e)]};
     self.strokes.push(self.cur); fisaUndoStack.push(self); self.redrawFront();
   });
   front.addEventListener('pointermove',function(e){
     if(!self.cur) return;
-    /* 수직 이동이 수평보다 크면 스크롤 의도 → 획 취소 */
-    if(startY!==null){
-      var dy=Math.abs(e.clientY-startY), dx=Math.abs(e.clientX-(e.clientX-(e.movementX||0)));
-      if(dy>12 && dy>dx*1.5){ self.strokes.pop(); self.cur=null; front.style.touchAction='pan-y'; self.redrawFront(); return; }
+    if(!drawDecided){
+      var dx=Math.abs(e.clientX-startX), dy=Math.abs(e.clientY-startY);
+      /* 충분히 움직이기 전엔 판단 보류 */
+      if(dx<4 && dy<4) return;
+      if(dy>dx*1.8){
+        /* 세로 방향 → 스크롤: 획 취소하고 손 놓기 */
+        self.strokes.pop(); fisaUndoStack.pop(); self.cur=null;
+        front.style.touchAction='pan-y'; self.redrawFront(); return;
+      }
+      /* 가로/대각 방향 → 쓰기 확정 */
+      drawDecided=true; front.style.touchAction='none';
     }
-    e.preventDefault(); front.style.touchAction='none';
+    e.preventDefault();
     var ev=e.getCoalescedEvents?e.getCoalescedEvents():[e];
     for(var i=0;i<ev.length;i++) self.cur.pts.push(norm(ev[i]));
     self.redrawFront();
   });
-  function end(){ if(!self.cur) return;
+  function end(){
+    front.style.touchAction='pan-y'; drawDecided=false;
+    if(!self.cur) return;
     if(self.cur.pts.length===1){var p=self.cur.pts[0];self.cur.pts.push({x:p.x+.001,y:p.y+.001,p:p.p});}
-    self.cur=null; front.style.touchAction='pan-y'; self.redrawFront();
+    self.cur=null; self.redrawFront();
   }
   front.addEventListener('pointerup',end); front.addEventListener('pointercancel',end);
   front.addEventListener('pointerleave',function(){ if(self.cur) end(); });
