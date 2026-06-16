@@ -1,0 +1,1021 @@
+<html lang="ko" style="--cell: 128px; --fisa-fs: 38px;"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<title>한글 쓰기 연습</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Gaegu&amp;family=Nanum+Pen+Script&amp;family=Noto+Sans+KR:wght@400;600;700&amp;family=Noto+Serif+KR:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBF8F1; --paper-edge:#F1EBDD;
+  --ink:#1C1A17; --ink-soft:#5A5446;
+  --line:#CDBF9F; --guide:#CFC8B6; --model:#D2CAB6;
+  --seal:#C2452D; --seal-deep:#A2371F;
+  --cell:128px; --lh:80px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;min-height:100%;}
+body{font-family:"Noto Sans KR",system-ui,sans-serif;color:var(--ink);background:var(--paper);-webkit-text-size-adjust:100%;overscroll-behavior-y:none;}
+
+header{position:sticky;top:0;z-index:30;background:rgba(251,248,241,.95);backdrop-filter:blur(8px) saturate(1.1);border-bottom:1.5px solid var(--paper-edge);}
+.topbar{display:flex;align-items:center;gap:10px;padding:9px 14px;max-width:1200px;margin:0 auto;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:8px;flex:none;}
+.brandmark{width:24px;height:24px;border-radius:6px;background:var(--seal);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px;font-family:"Noto Serif KR",serif;}
+.brand b{font-size:15px;letter-spacing:-.01em;}
+.tab-row{display:flex;gap:2px;background:var(--paper-edge);border-radius:10px;padding:3px;flex:none;}
+.tab{border:0;background:none;font:inherit;font-size:13px;font-weight:600;color:var(--ink-soft);padding:6px 13px;border-radius:7px;cursor:pointer;transition:background .15s,color .15s;white-space:nowrap;}
+.tab.on{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.08);}
+.spacer{flex:1;}
+
+.toolbar{border-bottom:1px solid var(--paper-edge);background:rgba(251,248,241,.97);}
+.tbinner{display:flex;flex-wrap:wrap;align-items:center;gap:7px 12px;padding:7px 14px;max-width:1200px;margin:0 auto;}
+.lab{font-size:11px;color:var(--ink-soft);white-space:nowrap;}
+.divider{width:1px;height:22px;background:var(--paper-edge);flex:none;}
+
+input[type=text]{font:inherit;font-size:14px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:9px;padding:6px 10px;outline:none;transition:border-color .15s,box-shadow .15s;}
+input[type=text]:focus{border-color:var(--seal);box-shadow:0 0 0 3px rgba(194,69,45,.11);}
+
+.btn{font:inherit;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:9px;padding:6px 11px;transition:transform .05s,background .12s,border-color .12s;white-space:nowrap;}
+.btn:active{transform:translateY(1px);}
+.btn.primary{background:var(--seal);border-color:var(--seal-deep);color:#fff;}
+.btn.primary:hover{background:var(--seal-deep);}
+.btn.ghost{background:transparent;border-color:transparent;}
+
+.num{display:flex;align-items:center;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#fff;}
+.num button{border:0;background:none;font:inherit;font-size:16px;width:28px;height:30px;color:var(--ink);cursor:pointer;}
+.num button:active{background:var(--paper-edge);}
+.num span{min-width:20px;text-align:center;font-size:13px;font-weight:600;}
+
+.chip{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2.5px solid #fff;box-shadow:0 0 0 1.5px var(--line);display:grid;place-items:center;transition:transform .08s,box-shadow .12s;flex:none;}
+.chip:active{transform:scale(.9);}
+.chip.sel{box-shadow:0 0 0 2.5px var(--seal);transform:scale(1.06);}
+.chip.tool{background:#fff;font-size:13px;}
+
+input[type=range]{accent-color:var(--seal);width:80px;cursor:pointer;}
+select{font:inherit;font-size:12px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:9px;padding:5px 7px;cursor:pointer;outline:none;}
+select:focus{border-color:var(--seal);}
+
+.toggle{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--ink-soft);cursor:pointer;user-select:none;}
+.toggle input{display:none;}
+.tbox{width:32px;height:19px;border-radius:10px;background:#E4DCC9;position:relative;transition:background .15s;flex:none;}
+.tbox::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:left .15s;}
+.toggle input:checked+.tbox{background:var(--seal);}
+.toggle input:checked+.tbox::after{left:15px;}
+
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#fff;}
+.seg button{border:0;background:none;font:inherit;font-size:12px;padding:5px 9px;cursor:pointer;color:var(--ink-soft);}
+.seg button.sel{background:var(--ink);color:var(--paper);font-weight:700;}
+
+/* ══ 패널 ══ */
+.panel{display:none;}.panel.on{display:block;}
+main{max-width:1200px;margin:0 auto;padding:16px 14px 100px;}
+
+/* ── 글자 프리셋 패널 ── */
+.preset-panel{margin-bottom:18px;}
+.preset-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.preset-chip{
+  font:inherit;font-size:12px;cursor:pointer;
+  border:1px solid var(--line);background:#fff;color:var(--ink-soft);
+  border-radius:20px;padding:5px 12px;
+  transition:background .12s,border-color .12s,color .12s;
+  white-space:nowrap;
+}
+.preset-chip:hover{border-color:var(--seal);color:var(--seal);}
+.preset-chip.active{background:var(--seal);border-color:var(--seal-deep);color:#fff;font-weight:700;}
+.preset-section-label{font-size:10px;font-weight:700;color:var(--seal);letter-spacing:.06em;margin-bottom:5px;opacity:.7;}
+
+/* ── 글자 연습 시트 ── */
+#sheet{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,var(--cell));justify-content:center;}
+.cell{position:relative;width:var(--cell);height:var(--cell);background:radial-gradient(120% 120% at 30% 20%,#FFFDF8 0%,var(--paper) 70%);border:1px solid var(--line);border-radius:10px;box-shadow:0 1px 0 rgba(0,0,0,.03),inset 0 0 0 1px rgba(255,255,255,.5);touch-action:none;overflow:hidden;}
+.cell canvas{position:absolute;inset:0;display:block;}
+.cell .idx{position:absolute;top:4px;left:5px;font-size:9px;color:var(--seal);font-weight:700;opacity:.45;pointer-events:none;}
+.cell .cerase{position:absolute;bottom:3px;right:3px;z-index:3;width:20px;height:20px;border-radius:6px;border:1px solid var(--line);background:rgba(255,255,255,.9);color:var(--ink-soft);font-size:10px;display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .12s;}
+.cell:hover .cerase,.cell.touched .cerase{opacity:1;}
+
+/* ── 선긋기 ── */
+.line-section{margin-bottom:28px;}
+.line-section-title{font-size:12px;font-weight:700;color:var(--ink-soft);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.line-section-title::after{content:"";flex:1;height:1px;background:var(--paper-edge);}
+.stroke-canvas-wrap{
+  position:relative;margin-bottom:10px;border-radius:10px;overflow:hidden;
+  border:1px solid var(--line);
+  background:radial-gradient(160% 140% at 20% 10%,#FFFDF8 0%,var(--paper) 80%);
+  touch-action:none;
+}
+.stroke-canvas-wrap canvas{display:block;width:100%;}
+.stroke-canvas-wrap .sc-erase{position:absolute;top:6px;right:6px;z-index:3;width:24px;height:24px;border-radius:7px;border:1px solid var(--line);background:rgba(255,255,255,.9);font-size:11px;display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .12s;}
+.stroke-canvas-wrap:hover .sc-erase{opacity:1;}
+.stroke-label{position:absolute;top:8px;left:10px;font-size:10px;color:var(--seal);font-weight:700;opacity:.5;pointer-events:none;}
+
+/* ── 필사 ── */
+.fisa-quote-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin-bottom:20px;box-shadow:0 1px 4px rgba(28,26,23,.05);}
+.fisa-quote-card .fq-label{font-size:11px;color:var(--seal);font-weight:700;letter-spacing:.06em;margin-bottom:7px;}
+.fisa-quote-card .fq-text{font-family:"Noto Serif KR",serif;font-size:17px;line-height:1.8;color:var(--ink);margin-bottom:5px;}
+.fisa-quote-card .fq-source{font-size:12px;color:var(--ink-soft);}
+.fisa-quote-card .fq-nav{display:flex;align-items:center;gap:7px;margin-top:12px;flex-wrap:wrap;}
+.fisa-line{position:relative;margin-bottom:12px;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:radial-gradient(160% 140% at 20% 10%,#FFFDF8 0%,var(--paper) 80%);touch-action:none;}
+.fisa-line canvas{position:absolute;inset:0;display:block;width:100%;height:100%;cursor:crosshair;}
+.fisa-line .fl-sample{
+  position:relative;z-index:0;
+  padding:0 14px;
+  display:flex;align-items:flex-end;
+  height:var(--lh);
+  font-family:"Noto Serif KR",serif;
+  font-weight:700;
+  font-size:var(--fisa-fs,28px);
+  line-height:1;
+  color:var(--ink);
+  opacity:0.15;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:clip;
+  padding-bottom:14px;
+  pointer-events:none;
+  user-select:none;
+}
+.fisa-line.guide-off .fl-sample{display:none;}
+.fisa-line .fl-linenum{position:absolute;top:7px;left:9px;font-size:10px;color:var(--seal);opacity:.4;font-weight:700;pointer-events:none;}
+.fisa-line .fl-erase{position:absolute;top:6px;right:7px;z-index:5;width:24px;height:24px;border-radius:7px;border:1px solid var(--line);background:rgba(255,255,255,.9);font-size:11px;display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .12s;}
+.fisa-line:hover .fl-erase{opacity:1;}
+
+/* 명언 모달 */
+.modal-bg{position:fixed;inset:0;z-index:50;background:rgba(28,26,23,.35);backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center;}
+.modal-bg.hidden{display:none;}
+.modal{background:var(--paper);border-radius:20px 20px 0 0;width:100%;max-width:720px;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 -4px 32px rgba(0,0,0,.15);}
+.modal-head{padding:14px 18px 10px;border-bottom:1px solid var(--paper-edge);display:flex;align-items:center;gap:9px;}
+.modal-head h2{font-size:15px;font-weight:700;margin:0;flex:1;}
+.modal-body{overflow-y:auto;padding:8px 10px 24px;flex:1;}
+.modal-cat{font-size:11px;font-weight:700;color:var(--seal);letter-spacing:.06em;padding:9px 7px 5px;}
+.modal-item{display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:9px;cursor:pointer;border:1px solid transparent;transition:background .12s,border-color .12s;margin-bottom:3px;}
+.modal-item:hover{background:#fff;border-color:var(--line);}
+.modal-item.sel{background:#fff;border-color:var(--seal);box-shadow:0 0 0 2px rgba(194,69,45,.1);}
+.modal-item .mi-text{font-family:"Noto Serif KR",serif;font-size:14px;line-height:1.6;color:var(--ink);}
+.modal-item .mi-src{font-size:11px;color:var(--ink-soft);}
+.modal-search{font:inherit;font-size:14px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:9px;padding:7px 11px;outline:none;flex:1;min-width:0;}
+.modal-search:focus{border-color:var(--seal);}
+
+.empty{display:flex;align-items:center;justify-content:center;color:var(--ink-soft);font-size:13px;text-align:center;padding:48px 16px;line-height:1.8;grid-column:1/-1;}
+
+footer{position:fixed;bottom:0;left:0;right:0;z-index:20;display:flex;gap:7px;justify-content:center;padding:9px 14px calc(9px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--paper) 45%);pointer-events:none;}
+footer .btn{pointer-events:auto;box-shadow:0 4px 14px rgba(28,26,23,.1);}
+
+@media(max-width:600px){.brand b{display:none;}.divider{display:none;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <div class="brand">
+      <div class="brandmark">習</div>
+      <b>한글 쓰기 연습</b>
+    </div>
+    <div class="tab-row">
+      <button class="tab" data-tab="char">글자 연습</button>
+      <button class="tab" data-tab="line">선 긋기</button>
+      <button class="tab on" data-tab="fisa">필사</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="tbinner" style="padding:0;gap:7px;" id="pens">
+      <span class="chip sel" data-color="#1C1A17" style="background:#1C1A17" title="먹"></span>
+      <span class="chip" data-color="#1F4E8C" style="background:#1F4E8C" title="파랑"></span>
+      <span class="chip" data-color="#C2452D" style="background:#C2452D" title="빨강"></span>
+      <span class="chip" data-color="#7A736A" style="background:#7A736A" title="연필"></span>
+      <span class="chip tool" data-tool="erase" title="지우개">⌫</span>
+      <input type="range" id="width" min="2" max="16" step="1" value="6" style="width:75px;">
+    </div>
+  </div>
+
+  <!-- 글자연습 툴바 -->
+  <div class="toolbar" id="tb-char" style="display: none;">
+    <div class="tbinner">
+      <span class="lab">직접 입력</span>
+      <input id="text" type="text" value="가나다라마바사아자차카타파하" style="min-width:140px;max-width:36vw;">
+      <button id="apply" class="btn primary">적용</button>
+      <div class="divider"></div>
+      <span class="lab">반복</span>
+      <div class="num"><button id="repMinus">−</button><span id="repVal">1</span><button id="repPlus">+</button></div>
+      <div class="divider"></div>
+      <label class="toggle"><input id="tGuide" type="checkbox" checked=""><span class="tbox"></span>표본</label>
+      <label class="toggle"><input id="tGrid" type="checkbox" checked=""><span class="tbox"></span>십자선</label>
+      <label class="toggle"><input id="tDiag" type="checkbox"><span class="tbox"></span>대각선</label>
+      <div class="divider"></div>
+      <span class="lab">글자체</span>
+      <select id="font">
+        <option value="'Noto Sans KR',sans-serif">고딕</option>
+        <option value="'Noto Serif KR',serif">명조</option>
+        <option value="'Nanum Pen Script',cursive">손글씨·펜</option>
+        <option value="'Gaegu',cursive">손글씨·둥근</option>
+      </select>
+      <div class="divider"></div>
+      <span class="lab">칸 크기</span>
+      <div class="seg" id="cellsize">
+        <button data-s="96">소</button>
+        <button data-s="128" class="sel">중</button>
+        <button data-s="168">대</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 선긋기 툴바 -->
+  <div class="toolbar" id="tb-line" style="display:none;">
+    <div class="tbinner">
+      <span class="lab">선 굵기</span>
+      <input type="range" id="lineStrokeW" min="1" max="12" step="1" value="4" style="width:90px;">
+      <div class="divider"></div>
+      <label class="toggle"><input id="lGuide" type="checkbox" checked=""><span class="tbox"></span>가이드선</label>
+      <div class="divider"></div>
+      <span class="lab">줄 수</span>
+      <div class="num"><button id="lRowMinus">−</button><span id="lRowVal">5</span><button id="lRowPlus">+</button></div>
+    </div>
+  </div>
+
+  <!-- 필사 툴바 -->
+  <div class="toolbar" id="tb-fisa" style="">
+    <div class="tbinner">
+      <button class="btn primary" id="btnQuoteLib">📚 명언·시 고르기</button>
+      <div class="divider"></div>
+      <span class="lab">직접 입력</span>
+      <input id="fisaCustomText" type="text" placeholder="필사할 문장을 입력…" style="min-width:180px;max-width:38vw;">
+      <input id="fisaCustomSrc" type="text" placeholder="출처 (선택)" style="min-width:80px;max-width:14vw;">
+      <button class="btn" id="btnFisaApply">적용</button>
+      <div class="divider"></div>
+      <label class="toggle"><input id="fGuide" type="checkbox" checked=""><span class="tbox"></span>표본</label>
+      <div class="divider"></div>
+      <span class="lab">글자 크기</span>
+      <div class="seg" id="fontsize">
+        <button data-f="18" class="">소</button>
+        <button data-f="28" class="">중</button>
+        <button data-f="38" class="sel">대</button>
+        <button data-f="52">특대</button>
+      </div>
+      <div class="divider"></div>
+      <span class="lab">줄 높이</span>
+      <div class="seg" id="linesize">
+        <button data-h="64">소</button>
+        <button data-h="80" class="sel">중</button>
+        <button data-h="104">대</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- 글자 연습 패널 -->
+<div class="panel" id="panel-char">
+  <main>
+    <div class="preset-panel" id="presetPanel"><div class="preset-section-label">자음·모음</div><div class="preset-row"><button class="preset-chip" data-idx="0">기본 자음</button><button class="preset-chip" data-idx="1">기본 모음</button><button class="preset-chip" data-idx="2">이중 모음</button></div><div class="preset-section-label">가나다</div><div class="preset-row"><button class="preset-chip" data-idx="3">가나다 (ㅏ)</button><button class="preset-chip" data-idx="4">각낙닥… (받침ㄱ)</button><button class="preset-chip" data-idx="5">간난단… (받침ㄴ)</button><button class="preset-chip" data-idx="6">갈날달… (받침ㄹ)</button><button class="preset-chip" data-idx="7">감남담… (받침ㅁ)</button><button class="preset-chip" data-idx="8">갑납답… (받침ㅂ)</button><button class="preset-chip" data-idx="9">강낭당… (받침ㅇ)</button><button class="preset-chip" data-idx="10">거너더… (ㅓ)</button><button class="preset-chip" data-idx="11">고노도… (ㅗ)</button><button class="preset-chip" data-idx="12">구누두… (ㅜ)</button><button class="preset-chip" data-idx="13">그느드… (ㅡ)</button><button class="preset-chip" data-idx="14">기니디… (ㅣ)</button></div><div class="preset-section-label">숫자·기호</div><div class="preset-row"><button class="preset-chip" data-idx="15">숫자 0–9</button><button class="preset-chip" data-idx="16">한자 기본 수</button></div><div class="preset-section-label">사자성어</div><div class="preset-row"><button class="preset-chip" data-idx="17">사자성어 I</button><button class="preset-chip" data-idx="18">사자성어 II</button></div><div class="preset-section-label">생활 한자</div><div class="preset-row"><button class="preset-chip" data-idx="19">이름 자주 쓰는 글자</button><button class="preset-chip" data-idx="20">날씨·계절</button></div></div>
+    <div id="sheet"><div class="cell"><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><div class="idx">1</div><button class="cerase">⟲</button></div><div class="cell"><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><div class="idx">2</div><button class="cerase">⟲</button></div><div class="cell"><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><div class="idx">3</div><button class="cerase">⟲</button></div><div class="cell"><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><div class="idx">4</div><button class="cerase">⟲</button></div><div class="cell"><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><div class="idx">5</div><button class="cerase">⟲</button></div><div class="cell"><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><div class="idx">6</div><button class="cerase">⟲</button></div><div class="cell"><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><div class="idx">7</div><button class="cerase">⟲</button></div><div class="cell"><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><div class="idx">8</div><button class="cerase">⟲</button></div><div class="cell"><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><div class="idx">9</div><button class="cerase">⟲</button></div><div class="cell"><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><div class="idx">10</div><button class="cerase">⟲</button></div><div class="cell"><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><div class="idx">11</div><button class="cerase">⟲</button></div><div class="cell"><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><div class="idx">12</div><button class="cerase">⟲</button></div><div class="cell"><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><div class="idx">13</div><button class="cerase">⟲</button></div><div class="cell"><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><canvas width="128" height="128" style="width: 128px; height: 128px;"></canvas><div class="idx">14</div><button class="cerase">⟲</button></div></div>
+  </main>
+</div>
+
+<!-- 선 긋기 패널 -->
+<div class="panel" id="panel-line">
+  <main id="line-main"></main>
+</div>
+
+<!-- 필사 패널 -->
+<div class="panel on" id="panel-fisa">
+  <main id="fisa-main">
+    <div id="fisa-quote-area"><div class="fisa-quote-card"><div class="fq-label">✦ 시 필사</div><div class="fq-text" style="white-space:pre-line;font-size:15px;line-height:1.9;">내가 그의 이름을 불러 주기 전에는
+그는 다만
+하나의 몸짓에 지나지 않았다.
+
+내가 그의 이름을 불러 주었을 때
+그는 나에게로 와서
+꽃이 되었다.
+
+내가 그의 이름을 불러 준 것처럼
+나의 이 빛깔과 향기에 알맞는
+누가 나의 이름을 불러다오.
+
+그에게로 가서 나도
+그의 꽃이 되고 싶다.
+
+우리들은 모두
+무엇이 되고 싶다.
+너는 나에게 나는 너에게
+잊혀지지 않는 하나의 눈짓이 되고 싶다.</div><div class="fq-source">— 김춘수, 〈꽃〉</div><div class="fq-nav"><button class="btn" id="prevQuote">← 이전</button><button class="btn primary" id="nextQuote">다음 →</button><button class="btn ghost" id="randQuote">🎲 랜덤</button></div></div></div>
+    <div id="fisa-lines"><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">내가 그의 이름을 불러 주기 전에는</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">1줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">1줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">그는 다만</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">2줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">2줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">하나의 몸짓에 지나지 않았다.</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">3줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">3줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div style="height: 18px; margin-bottom: 6px; border-bottom: 1px dashed var(--paper-edge);"></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">내가 그의 이름을 불러 주었을 때</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">5줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">5줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">그는 나에게로 와서</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">6줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">6줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">꽃이 되었다.</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">7줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">7줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div style="height: 18px; margin-bottom: 6px; border-bottom: 1px dashed var(--paper-edge);"></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">내가 그의 이름을 불러 준 것처럼</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">9줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">9줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">나의 이 빛깔과 향기에 알맞는</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">10줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">10줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">누가 나의 이름을 불러다오.</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">11줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">11줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div style="height: 18px; margin-bottom: 6px; border-bottom: 1px dashed var(--paper-edge);"></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">그에게로 가서 나도</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">13줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">13줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">그의 꽃이 되고 싶다.</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">14줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">14줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div style="height: 18px; margin-bottom: 6px; border-bottom: 1px dashed var(--paper-edge);"></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">우리들은 모두</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">16줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">16줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">무엇이 되고 싶다.</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">17줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">17줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">너는 나에게 나는 너에게</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">18줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">18줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;">잊혀지지 않는 하나의 눈짓이 되고 싶다.</div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">19줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">19줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">31줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">33줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div><div class="fisa-line" style="height: 80px;"><div class="fl-sample" style="height: 80px; font-size: 38px;"></div><canvas width="1172" height="80" style="width: 1172px; height: 80px;"></canvas><div class="fl-linenum">35줄</div><button class="fl-erase" title="이 줄 지우기">⟲</button></div></div>
+  </main>
+</div>
+
+<!-- 명언/시 모달 -->
+<div class="modal-bg hidden" id="quoteModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>명언 · 시 모음</h2>
+      <input class="modal-search" id="quoteSearch" placeholder="검색…" type="search">
+      <button class="btn" id="closeModal">닫기</button>
+    </div>
+    <div class="modal-body" id="quoteList"><div class="modal-cat">삶·인생</div><div class="modal-item sel"><span class="mi-text">인생은 자전거를 타는 것과 같다. 균형을 잡으려면 계속 움직여야 한다.</span><span class="mi-src">— 알베르트 아인슈타인</span></div><div class="modal-item"><span class="mi-text">당신이 할 수 있다고 생각하든, 할 수 없다고 생각하든, 당신은 옳다.</span><span class="mi-src">— 헨리 포드</span></div><div class="modal-item"><span class="mi-text">삶이 있는 한 희망은 있다.</span><span class="mi-src">— 키케로</span></div><div class="modal-item"><span class="mi-text">어제는 역사이고 내일은 미스터리이며 오늘은 선물이다. 그래서 현재를 present라고 부른다.</span><span class="mi-src">— 엘리너 루스벨트</span></div><div class="modal-item"><span class="mi-text">나는 실패한 것이 아니다. 그저 작동하지 않는 만 가지 방법을 발견했을 뿐이다.</span><span class="mi-src">— 토머스 에디슨</span></div><div class="modal-item"><span class="mi-text">아직 살아 있다면, 아직 늦지 않았다.</span><span class="mi-src">— C.S. 루이스</span></div><div class="modal-cat">도전·성장</div><div class="modal-item"><span class="mi-text">천 리 길도 한 걸음부터.</span><span class="mi-src">— 노자</span></div><div class="modal-item"><span class="mi-text">성공은 최종 목적지가 아니며 실패는 치명적이지 않다. 중요한 것은 계속하는 용기다.</span><span class="mi-src">— 윈스턴 처칠</span></div><div class="modal-item"><span class="mi-text">넘어지는 것이 실패가 아니라, 넘어진 채로 있는 것이 실패다.</span><span class="mi-src">— 공자</span></div><div class="modal-item"><span class="mi-text">꿈을 꿀 수 있다면 이룰 수도 있다.</span><span class="mi-src">— 월트 디즈니</span></div><div class="modal-item"><span class="mi-text">어려움 속에 기회가 있다.</span><span class="mi-src">— 알베르트 아인슈타인</span></div><div class="modal-item"><span class="mi-text">오늘 할 수 있는 일에 최선을 다하라.</span><span class="mi-src">— 테오도어 루스벨트</span></div><div class="modal-cat">지혜·철학</div><div class="modal-item"><span class="mi-text">너 자신을 알라.</span><span class="mi-src">— 소크라테스</span></div><div class="modal-item"><span class="mi-text">교육은 양동이를 채우는 것이 아니라 불꽃에 불을 붙이는 것이다.</span><span class="mi-src">— 윌리엄 버틀러 예이츠</span></div><div class="modal-item"><span class="mi-text">아는 것이 힘이다.</span><span class="mi-src">— 프랜시스 베이컨</span></div><div class="modal-item"><span class="mi-text">단순함은 최고의 정교함이다.</span><span class="mi-src">— 레오나르도 다 빈치</span></div><div class="modal-item"><span class="mi-text">인간은 생각하는 갈대다.</span><span class="mi-src">— 블레즈 파스칼</span></div><div class="modal-cat">사랑·관계</div><div class="modal-item"><span class="mi-text">사랑받는 것이 행복이 아니라 사랑하는 것이 행복이다.</span><span class="mi-src">— 헤르만 헤세</span></div><div class="modal-item"><span class="mi-text">혼자 가면 빠르지만 함께 가면 멀리 간다.</span><span class="mi-src">— 아프리카 속담</span></div><div class="modal-item"><span class="mi-text">웃음은 사람 사이의 거리를 가장 짧게 줄여주는 것이다.</span><span class="mi-src">— 빅터 보르게</span></div><div class="modal-cat">한국 속담</div><div class="modal-item"><span class="mi-text">가는 말이 고와야 오는 말이 곱다.</span><span class="mi-src">— 한국 속담</span></div><div class="modal-item"><span class="mi-text">티끌 모아 태산.</span><span class="mi-src">— 한국 속담</span></div><div class="modal-item"><span class="mi-text">배움에는 끝이 없다.</span><span class="mi-src">— 한국 속담</span></div><div class="modal-item"><span class="mi-text">사람은 죽어서 이름을 남기고 호랑이는 죽어서 가죽을 남긴다.</span><span class="mi-src">— 한국 속담</span></div><div class="modal-item"><span class="mi-text">백지장도 맞들면 낫다.</span><span class="mi-src">— 한국 속담</span></div><div class="modal-item"><span class="mi-text">말 한 마디에 천 냥 빚을 갚는다.</span><span class="mi-src">— 한국 속담</span></div><div class="modal-cat">건강·마음</div><div class="modal-item"><span class="mi-text">건강한 몸에 건강한 정신이 깃든다.</span><span class="mi-src">— 유베날리스</span></div><div class="modal-item"><span class="mi-text">지금 이 순간에 집중하라.</span><span class="mi-src">— 에크하르트 톨레</span></div><div class="modal-cat">시</div><div class="modal-item"><span class="mi-text">나 보기가 역겨워 가실 때에는 말없이 고이 보내 드리오리다.  영변에 약산 진달래꽃 아름 …</span><span class="mi-src">— 김소월, 〈진달래꽃〉</span></div><div class="modal-item"><span class="mi-text">내가 그의 이름을 불러 주기 전에는 그는 다만 하나의 몸짓에 지나지 않았다.  내가 그의 …</span><span class="mi-src">— 김춘수, 〈꽃〉</span></div><div class="modal-item"><span class="mi-text">죽는 날까지 하늘을 우러러 한 점 부끄럼이 없기를, 잎새에 이는 바람에도 나는 괴로워했다.…</span><span class="mi-src">— 윤동주, 〈서시〉</span></div><div class="modal-item"><span class="mi-text">산에는 꽃 피네 꽃이 피네 갈 봄 여름 없이 꽃이 피네.  산에 산에 피는 꽃은 저만치 혼…</span><span class="mi-src">— 김소월, 〈산유화〉</span></div><div class="modal-item"><span class="mi-text">모란이 피기까지는 나는 아직 나의 봄을 기다리고 있을 테요.  모란이 뚝뚝 떨어져 버린 날…</span><span class="mi-src">— 김영랑, 〈모란이 피기까지는〉</span></div><div class="modal-item"><span class="mi-text">넓은 벌 동쪽 끝으로 옛이야기 지줄대는 실개천이 휘돌아 나가고, 얼룩백이 황소가 해설피 금…</span><span class="mi-src">— 정지용, 〈향수〉</span></div><div class="modal-item"><span class="mi-text">청포도가 익어 가는 시절 이 마을 전설이 주저리주저리 열리고 먼 데 하늘이 꿈꾸며 알알이 …</span><span class="mi-src">— 이육사, 〈청포도〉</span></div><div class="modal-item"><span class="mi-text">내 마음은 호수요, 그대 노 저어 오오. 나는 그대의 흰 그림자를 안고, 옥같이 그대의 뱃…</span><span class="mi-src">— 김동명, 〈내 마음은〉</span></div><div class="modal-item"><span class="mi-text">산이 날 에워싸고 씨나 뿌리며 살아라 한다.  밭이나 갈며 살아라 한다.  어느 짧은 다래…</span><span class="mi-src">— 박목월, 〈산이 날 에워싸고〉</span></div></div>
+  </div>
+</div>
+
+<footer>
+  <button class="btn ghost" id="undo">되돌리기</button>
+  <button class="btn" id="clear">전체 지우기</button>
+  <button class="btn" id="download" title="index.html로 다운로드">⬇ 다운로드</button>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+/* ══════════════ 글자 프리셋 ══════════════ */
+var PRESETS = [
+  {label:"기본 자음", cat:"자음·모음", text:"ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ"},
+  {label:"기본 모음", cat:"자음·모음", text:"ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ"},
+  {label:"이중 모음", cat:"자음·모음", text:"ㅐㅒㅔㅖㅘㅙㅚㅝㅞㅟㅢ"},
+  {label:"가나다 (ㅏ)", cat:"가나다", text:"가나다라마바사아자차카타파하"},
+  {label:"각낙닥… (받침ㄱ)", cat:"가나다", text:"각낙닥락막박삭악작착칵탁팍학"},
+  {label:"간난단… (받침ㄴ)", cat:"가나다", text:"간난단란만반산안잔찬칸탄판한"},
+  {label:"갈날달… (받침ㄹ)", cat:"가나다", text:"갈날달랄말발살알잘찰칼탈팔할"},
+  {label:"감남담… (받침ㅁ)", cat:"가나다", text:"감남담람맘밤삼암잠참캄탐팜함"},
+  {label:"갑납답… (받침ㅂ)", cat:"가나다", text:"갑납답랍맙밥삽압잡찹캅탑팝합"},
+  {label:"강낭당… (받침ㅇ)", cat:"가나다", text:"강낭당랑망방상앙장창캉탕팡항"},
+  {label:"거너더… (ㅓ)", cat:"가나다", text:"거너더러머버서어저처커터퍼허"},
+  {label:"고노도… (ㅗ)", cat:"가나다", text:"고노도로모보소오조초코토포호"},
+  {label:"구누두… (ㅜ)", cat:"가나다", text:"구누두루무부수우주추쿠투푸후"},
+  {label:"그느드… (ㅡ)", cat:"가나다", text:"그느드르므브스으즈츠크트프흐"},
+  {label:"기니디… (ㅣ)", cat:"가나다", text:"기니디리미비시이지치키티피히"},
+  {label:"숫자 0–9", cat:"숫자·기호", text:"0123456789"},
+  {label:"한자 기본 수", cat:"숫자·기호", text:"一二三四五六七八九十百千萬"},
+  {label:"사자성어 I", cat:"사자성어", text:"一石二鳥 百聞不如一見 過猶不及 溫故知新"},
+  {label:"사자성어 II", cat:"사자성어", text:"十中八九 四面楚歌 臥薪嘗膽 刻舟求劍"},
+  {label:"이름 자주 쓰는 글자", cat:"생활 한자", text:"金李朴崔鄭康申黃林"},
+  {label:"날씨·계절", cat:"생활 한자", text:"春夏秋冬 雨雪風晴"},
+];
+
+/* ══════════════ 명언·시 데이터 ══════════════ */
+var QUOTES = [
+  {cat:"삶·인생",text:"인생은 자전거를 타는 것과 같다. 균형을 잡으려면 계속 움직여야 한다.",src:"알베르트 아인슈타인"},
+  {cat:"삶·인생",text:"당신이 할 수 있다고 생각하든, 할 수 없다고 생각하든, 당신은 옳다.",src:"헨리 포드"},
+  {cat:"삶·인생",text:"삶이 있는 한 희망은 있다.",src:"키케로"},
+  {cat:"삶·인생",text:"어제는 역사이고 내일은 미스터리이며 오늘은 선물이다. 그래서 현재를 present라고 부른다.",src:"엘리너 루스벨트"},
+  {cat:"삶·인생",text:"나는 실패한 것이 아니다. 그저 작동하지 않는 만 가지 방법을 발견했을 뿐이다.",src:"토머스 에디슨"},
+  {cat:"삶·인생",text:"아직 살아 있다면, 아직 늦지 않았다.",src:"C.S. 루이스"},
+  {cat:"도전·성장",text:"천 리 길도 한 걸음부터.",src:"노자"},
+  {cat:"도전·성장",text:"성공은 최종 목적지가 아니며 실패는 치명적이지 않다. 중요한 것은 계속하는 용기다.",src:"윈스턴 처칠"},
+  {cat:"도전·성장",text:"넘어지는 것이 실패가 아니라, 넘어진 채로 있는 것이 실패다.",src:"공자"},
+  {cat:"도전·성장",text:"꿈을 꿀 수 있다면 이룰 수도 있다.",src:"월트 디즈니"},
+  {cat:"도전·성장",text:"어려움 속에 기회가 있다.",src:"알베르트 아인슈타인"},
+  {cat:"도전·성장",text:"오늘 할 수 있는 일에 최선을 다하라.",src:"테오도어 루스벨트"},
+  {cat:"지혜·철학",text:"너 자신을 알라.",src:"소크라테스"},
+  {cat:"지혜·철학",text:"교육은 양동이를 채우는 것이 아니라 불꽃에 불을 붙이는 것이다.",src:"윌리엄 버틀러 예이츠"},
+  {cat:"지혜·철학",text:"아는 것이 힘이다.",src:"프랜시스 베이컨"},
+  {cat:"지혜·철학",text:"단순함은 최고의 정교함이다.",src:"레오나르도 다 빈치"},
+  {cat:"지혜·철학",text:"인간은 생각하는 갈대다.",src:"블레즈 파스칼"},
+  {cat:"사랑·관계",text:"사랑받는 것이 행복이 아니라 사랑하는 것이 행복이다.",src:"헤르만 헤세"},
+  {cat:"사랑·관계",text:"혼자 가면 빠르지만 함께 가면 멀리 간다.",src:"아프리카 속담"},
+  {cat:"사랑·관계",text:"웃음은 사람 사이의 거리를 가장 짧게 줄여주는 것이다.",src:"빅터 보르게"},
+  {cat:"한국 속담",text:"가는 말이 고와야 오는 말이 곱다.",src:"한국 속담"},
+  {cat:"한국 속담",text:"티끌 모아 태산.",src:"한국 속담"},
+  {cat:"한국 속담",text:"배움에는 끝이 없다.",src:"한국 속담"},
+  {cat:"한국 속담",text:"사람은 죽어서 이름을 남기고 호랑이는 죽어서 가죽을 남긴다.",src:"한국 속담"},
+  {cat:"한국 속담",text:"백지장도 맞들면 낫다.",src:"한국 속담"},
+  {cat:"한국 속담",text:"말 한 마디에 천 냥 빚을 갚는다.",src:"한국 속담"},
+  {cat:"건강·마음",text:"건강한 몸에 건강한 정신이 깃든다.",src:"유베날리스"},
+  {cat:"건강·마음",text:"지금 이 순간에 집중하라.",src:"에크하르트 톨레"},
+  {cat:"시",poem:true,text:"나 보기가 역겨워\n가실 때에는\n말없이 고이 보내 드리오리다.\n\n영변에 약산\n진달래꽃\n아름 따다 가실 길에 뿌리오리다.\n\n가시는 걸음 걸음\n놓인 그 꽃을\n사뿐히 즈려 밟고 가시옵소서.\n\n나 보기가 역겨워\n가실 때에는\n죽어도 아니 눈물 흘리오리다.",src:"김소월, 〈진달래꽃〉"},
+  {cat:"시",poem:true,text:"내가 그의 이름을 불러 주기 전에는\n그는 다만\n하나의 몸짓에 지나지 않았다.\n\n내가 그의 이름을 불러 주었을 때\n그는 나에게로 와서\n꽃이 되었다.\n\n내가 그의 이름을 불러 준 것처럼\n나의 이 빛깔과 향기에 알맞는\n누가 나의 이름을 불러다오.\n\n그에게로 가서 나도\n그의 꽃이 되고 싶다.\n\n우리들은 모두\n무엇이 되고 싶다.\n너는 나에게 나는 너에게\n잊혀지지 않는 하나의 눈짓이 되고 싶다.",src:"김춘수, 〈꽃〉"},
+  {cat:"시",poem:true,text:"죽는 날까지 하늘을 우러러\n한 점 부끄럼이 없기를,\n잎새에 이는 바람에도\n나는 괴로워했다.\n\n별을 노래하는 마음으로\n모든 죽어 가는 것을 사랑해야지\n그리고 나한테 주어진 길을\n걸어가야겠다.\n\n오늘 밤에도 별이 바람에 스치운다.",src:"윤동주, 〈서시〉"},
+  {cat:"시",poem:true,text:"산에는 꽃 피네\n꽃이 피네\n갈 봄 여름 없이\n꽃이 피네.\n\n산에\n산에\n피는 꽃은\n저만치 혼자서 피어 있네.\n\n산에서 우는 작은 새여\n꽃이 좋아\n산에서\n사노라네.\n\n산에는 꽃 지네\n꽃이 지네\n갈 봄 여름 없이\n꽃이 지네.",src:"김소월, 〈산유화〉"},
+  {cat:"시",poem:true,text:"모란이 피기까지는\n나는 아직 나의 봄을 기다리고 있을 테요.\n\n모란이 뚝뚝 떨어져 버린 날\n나는 비로소 봄을 여읜 설움에 잠길 테요.\n\n오월 어느 날, 그 하루 무덥던 날\n떨어져 누운 꽃잎마저 시들어 버리고는\n천지에 모란은 자취도 없어지고\n뻗쳐오르던 내 보람 서운케 무너졌느니!\n\n모란이 지고 말면 그뿐, 내 한 해는 다 가고 말아\n삼백예순 날 하냥 섭섭해 우옵내다.\n\n모란이 피기까지는\n나는 아직 기다리고 있을 테요, 찬란한 슬픔의 봄을.",src:"김영랑, 〈모란이 피기까지는〉"},
+  {cat:"시",poem:true,text:"넓은 벌 동쪽 끝으로\n옛이야기 지줄대는 실개천이 휘돌아 나가고,\n얼룩백이 황소가\n해설피 금빛 게으른 울음을 우는 곳,\n\n그곳이 차마 꿈엔들 잊힐리야.\n\n질화로에 재가 식어지면\n빈 밭에 밤바람 소리 말을 달리고,\n엷은 조름에 겨운 늙으신 아버지가\n짚베개를 돋아 고이시는 곳,\n\n그곳이 차마 꿈엔들 잊힐리야.",src:"정지용, 〈향수〉"},
+  {cat:"시",poem:true,text:"청포도가 익어 가는 시절\n이 마을 전설이 주저리주저리 열리고\n먼 데 하늘이 꿈꾸며 알알이 들어와 박혀,\n\n하늘 밑 푸른 바다가 가슴을 열고\n흰 돛단배가 곱게 밀려서 오면,\n\n내가 바라는 손님은 고달픈 몸으로\n청포(靑袍)를 입고 찾아온다고 했으니,\n\n내 그를 맞아 이 포도를 따 먹으면\n두 손은 함뿍 적셔도 좋으련,\n\n아이야, 우리 식탁엔 은쟁반에\n하이얀 모시 수건을 마련해 두렴.",src:"이육사, 〈청포도〉"},
+  {cat:"시",poem:true,text:"내 마음은 호수요,\n그대 노 저어 오오.\n나는 그대의 흰 그림자를 안고,\n옥같이 그대의 뱃전에 부서지리다.\n\n내 마음은 촛불이요,\n그대 저 문을 닫아 주오.\n나는 그대의 비단 옷자락에 떨며,\n고요히 최후의 한 방울도 남김없이 타오리다.",src:"김동명, 〈내 마음은〉"},
+  {cat:"시",poem:true,text:"산이 날 에워싸고\n씨나 뿌리며 살아라 한다.\n\n밭이나 갈며 살아라 한다.\n\n어느 짧은 다래 순\n몇 구비나 중동을 거쳐야\n다른 세상의 소식이 들릴까.\n\n온 세상이 정이 실어\n나 혼자서 살아라 한다.\n\n산이 날 에워싸고\n씨나 뿌리며 살아라 한다.\n밭이나 갈며 살아라 한다.",src:"박목월, 〈산이 날 에워싸고〉"},
+];
+
+/* ══════════════ 공유 상태 ══════════════ */
+var state = {
+  color:"#1C1A17", tool:"pen", width:6,
+  text:"가나다라마바사아자차카타파하", repeat:1,
+  showGuide:true, showGrid:true, showDiag:false,
+  font:"'Noto Sans KR',sans-serif", cell:128,
+  fisaQuote:null, fisaShowGuide:true, lineH:80, fisaFontSize:28,
+  lineRows:5, lineStrokeW:4, showLineGuide:true
+};
+var cells=[], undoStack=[];
+var fisaLines=[], fisaUndoStack=[];
+var strokeCanvases=[], strokeUndoStack=[];
+var curPreset=-1;
+var curTab='char';
+
+function dpr(){ return Math.max(1,window.devicePixelRatio||1); }
+function getCss(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ══════════════ 탭 전환 ══════════════ */
+document.querySelectorAll('.tab').forEach(function(t){
+  t.addEventListener('click',function(){
+    curTab=this.dataset.tab;
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on');});
+    this.classList.add('on');
+    document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on');});
+    document.getElementById('panel-'+curTab).classList.add('on');
+    document.getElementById('tb-char').style.display = curTab==='char'?'':'none';
+    document.getElementById('tb-line').style.display = curTab==='line'?'':'none';
+    document.getElementById('tb-fisa').style.display = curTab==='fisa'?'':'none';
+    if(curTab==='line' && strokeCanvases.length===0) buildLineExercise();
+    /* 필사 탭으로 전환할 때 패널이 display:block 된 직후 layout 재실행 */
+    if(curTab==='fisa' && fisaLines.length>0){
+      setTimeout(function(){ fisaLines.forEach(function(l){ l.layout(); }); }, 0);
+    }
+  });
+});
+
+/* ══════════════ 공통: 펜·지우개 ══════════════ */
+document.getElementById('pens').addEventListener('click',function(e){
+  var c=e.target.closest('.chip'); if(!c) return;
+  document.querySelectorAll('#pens .chip').forEach(function(x){x.classList.remove('sel');});
+  c.classList.add('sel');
+  if(c.dataset.tool==='erase'){ state.tool='erase'; }
+  else { state.tool='pen'; state.color=c.dataset.color; }
+});
+document.getElementById('width').addEventListener('input',function(){ state.width=+this.value; });
+
+/* ══════════════ ▶ 글자 프리셋 패널 ══════════════ */
+function buildPresetPanel(){
+  var panel=document.getElementById('presetPanel');
+  panel.innerHTML='';
+  var cats={};
+  PRESETS.forEach(function(p,i){ if(!cats[p.cat]) cats[p.cat]=[]; cats[p.cat].push({p:p,i:i}); });
+  Object.keys(cats).forEach(function(cat){
+    var lbl=document.createElement('div'); lbl.className='preset-section-label'; lbl.textContent=cat; panel.appendChild(lbl);
+    var row=document.createElement('div'); row.className='preset-row';
+    cats[cat].forEach(function(pair){
+      var btn=document.createElement('button'); btn.className='preset-chip'; btn.textContent=pair.p.label; btn.dataset.idx=pair.i;
+      btn.addEventListener('click',function(){
+        document.querySelectorAll('.preset-chip').forEach(function(x){x.classList.remove('active');});
+        btn.classList.add('active');
+        curPreset=pair.i;
+        state.text=pair.p.text;
+        document.getElementById('text').value=state.text;
+        buildChar();
+      });
+      row.appendChild(btn);
+    });
+    panel.appendChild(row);
+  });
+}
+
+/* ══════════════ ▶ 글자 연습 ══════════════ */
+function Cell(ch,index){
+  this.ch=ch; this.strokes=[]; this.cur=null;
+  var el=document.createElement('div'); el.className='cell';
+  var back=document.createElement('canvas'), front=document.createElement('canvas');
+  el.appendChild(back); el.appendChild(front);
+  if(index!=null && ch!==''){
+    var ix=document.createElement('div'); ix.className='idx'; ix.textContent=index; el.appendChild(ix);
+  }
+  var er=document.createElement('button'); er.className='cerase'; er.textContent='⟲'; el.appendChild(er);
+  this.el=el; this.back=back; this.front=front;
+  var self=this;
+  er.addEventListener('click',function(e){ e.stopPropagation(); self.clear(); });
+  function norm(e){
+    var r=front.getBoundingClientRect();
+    return {x:Math.min(1,Math.max(0,(e.clientX-r.left)/r.width)),y:Math.min(1,Math.max(0,(e.clientY-r.top)/r.height)),p:(e.pointerType==='pen'&&e.pressure>0)?e.pressure:0.5};
+  }
+  front.addEventListener('pointerdown',function(e){
+    e.preventDefault(); front.setPointerCapture(e.pointerId); el.classList.add('touched');
+    self.cur={color:state.color,width:state.width,erase:state.tool==='erase',pts:[norm(e)]};
+    self.strokes.push(self.cur); undoStack.push(self); self.redrawFront();
+  });
+  front.addEventListener('pointermove',function(e){
+    if(!self.cur) return; e.preventDefault();
+    var ev=e.getCoalescedEvents?e.getCoalescedEvents():[e];
+    for(var i=0;i<ev.length;i++) self.cur.pts.push(norm(ev[i]));
+    self.redrawFront();
+  });
+  function end(){ if(!self.cur) return;
+    if(self.cur.pts.length===1){var p=self.cur.pts[0];self.cur.pts.push({x:p.x+.001,y:p.y+.001,p:p.p});}
+    self.cur=null; self.redrawFront();
+  }
+  front.addEventListener('pointerup',end); front.addEventListener('pointercancel',end);
+  front.addEventListener('pointerleave',function(){ if(self.cur) end(); });
+}
+Cell.prototype.layout=function(){
+  var w=state.cell,r=dpr();
+  [this.back,this.front].forEach(function(c){
+    c.width=Math.round(w*r); c.height=Math.round(w*r);
+    c.style.width=w+'px'; c.style.height=w+'px';
+    c.getContext('2d').setTransform(r,0,0,r,0,0);
+  });
+  this.drawBack(); this.redrawFront();
+};
+Cell.prototype.drawBack=function(){
+  var ctx=this.back.getContext('2d'),w=state.cell;
+  ctx.clearRect(0,0,w,w);
+  if(state.showGrid){
+    ctx.save(); ctx.strokeStyle=getCss('--guide'); ctx.lineWidth=1; ctx.setLineDash([2,5]);
+    ctx.beginPath(); ctx.moveTo(w/2,5); ctx.lineTo(w/2,w-5); ctx.moveTo(5,w/2); ctx.lineTo(w-5,w/2); ctx.stroke(); ctx.restore();
+  }
+  if(state.showDiag){
+    ctx.save(); ctx.strokeStyle=getCss('--guide'); ctx.globalAlpha=.6; ctx.lineWidth=1; ctx.setLineDash([2,6]);
+    ctx.beginPath(); ctx.moveTo(7,7); ctx.lineTo(w-7,w-7); ctx.moveTo(w-7,7); ctx.lineTo(7,w-7); ctx.stroke(); ctx.restore();
+  }
+  if(state.showGuide && this.ch && this.ch!==' '){
+    ctx.save(); ctx.fillStyle=getCss('--model'); ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.font=Math.round(w*.7)+'px '+state.font; ctx.fillText(this.ch,w/2,w*.54); ctx.restore();
+  }
+};
+Cell.prototype.redrawFront=function(){
+  var ctx=this.front.getContext('2d'),w=state.cell;
+  ctx.clearRect(0,0,w,w); ctx.lineCap='round'; ctx.lineJoin='round';
+  for(var s=0;s<this.strokes.length;s++){
+    var st=this.strokes[s]; ctx.globalCompositeOperation=st.erase?'destination-out':'source-over';
+    ctx.strokeStyle=st.color;
+    var pts=st.pts; if(pts.length<2) continue;
+    for(var i=1;i<pts.length;i++){
+      var a=pts[i-1],b=pts[i],pr=(a.p+b.p)/2;
+      ctx.lineWidth=st.width*(st.erase?2.6:(0.55+0.9*pr));
+      ctx.beginPath(); ctx.moveTo(a.x*w,a.y*w);
+      ctx.quadraticCurveTo(a.x*w,a.y*w,(a.x+b.x)/2*w,(a.y+b.y)/2*w); ctx.lineTo(b.x*w,b.y*w); ctx.stroke();
+    }
+  }
+  ctx.globalCompositeOperation='source-over';
+  if(this.strokes.length===0) this.el.classList.remove('touched');
+};
+Cell.prototype.clear=function(){
+  var self=this; this.strokes=[];
+  undoStack=undoStack.filter(function(c){return c!==self;});
+  this.redrawFront();
+};
+
+var sheet=document.getElementById('sheet');
+function buildChar(){
+  sheet.innerHTML=''; cells=[]; undoStack=[];
+  var chars=Array.from(state.text),n=1,count=0;
+  for(var i=0;i<chars.length;i++){
+    var ch=chars[i];
+    if(ch===' '){ var bl=new Cell('',null); cells.push(bl); sheet.appendChild(bl.el); continue; }
+    if(ch==='\n') continue;
+    for(var r=0;r<state.repeat;r++){ var c=new Cell(ch,n++); cells.push(c); sheet.appendChild(c.el); count++; }
+  }
+  if(count===0){ var em=document.createElement('div'); em.className='empty'; em.style.gridColumn='1/-1'; em.textContent='연습할 글자를 선택하거나 직접 입력하세요.'; sheet.appendChild(em); }
+  requestAnimationFrame(function(){ cells.forEach(function(c){ c.layout(); }); });
+}
+function redrawAllBacks(){ cells.forEach(function(c){ c.drawBack(); }); }
+
+document.getElementById('apply').addEventListener('click',function(){
+  state.text=document.getElementById('text').value;
+  document.querySelectorAll('.preset-chip').forEach(function(x){x.classList.remove('active');}); curPreset=-1;
+  buildChar();
+});
+document.getElementById('text').addEventListener('keydown',function(e){
+  if(e.key==='Enter'){ state.text=this.value; document.querySelectorAll('.preset-chip').forEach(function(x){x.classList.remove('active');}); curPreset=-1; buildChar(); this.blur(); }
+});
+var repVal=document.getElementById('repVal');
+document.getElementById('repMinus').addEventListener('click',function(){ state.repeat=Math.max(1,state.repeat-1); repVal.textContent=state.repeat; buildChar(); });
+document.getElementById('repPlus').addEventListener('click',function(){ state.repeat=Math.min(12,state.repeat+1); repVal.textContent=state.repeat; buildChar(); });
+document.getElementById('tGuide').addEventListener('change',function(){ state.showGuide=this.checked; redrawAllBacks(); });
+document.getElementById('tGrid').addEventListener('change',function(){ state.showGrid=this.checked; redrawAllBacks(); });
+document.getElementById('tDiag').addEventListener('change',function(){ state.showDiag=this.checked; redrawAllBacks(); });
+document.getElementById('font').addEventListener('change',function(){ state.font=this.value; redrawAllBacks(); });
+document.getElementById('cellsize').addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b) return;
+  this.querySelectorAll('button').forEach(function(x){x.classList.remove('sel');}); b.classList.add('sel');
+  state.cell=+b.dataset.s; document.documentElement.style.setProperty('--cell',state.cell+'px');
+  cells.forEach(function(c){c.layout();});
+});
+
+/* ══════════════ ▶ 선 긋기 ══════════════ */
+var LINE_TYPES = [
+  {label:"가로선",   draw:function(ctx,W,H,n,N){ var y=H/2; ctx.moveTo(W*0.06,y); ctx.lineTo(W*0.94,y); }},
+  {label:"세로선",   draw:function(ctx,W,H){ var x=W/2; ctx.moveTo(x,H*0.08); ctx.lineTo(x,H*0.92); }},
+  {label:"사선 ╲",  draw:function(ctx,W,H){ ctx.moveTo(W*0.07,H*0.1); ctx.lineTo(W*0.93,H*0.9); }},
+  {label:"사선 ╱",  draw:function(ctx,W,H){ ctx.moveTo(W*0.93,H*0.1); ctx.lineTo(W*0.07,H*0.9); }},
+  {label:"ㄱ꺾기",   draw:function(ctx,W,H){ ctx.moveTo(W*0.15,H*0.28); ctx.lineTo(W*0.85,H*0.28); ctx.lineTo(W*0.85,H*0.82); }},
+  {label:"ㄴ꺾기",   draw:function(ctx,W,H){ ctx.moveTo(W*0.15,H*0.22); ctx.lineTo(W*0.15,H*0.78); ctx.lineTo(W*0.85,H*0.78); }},
+  {label:"S곡선",   draw:function(ctx,W,H){ ctx.moveTo(W*0.1,H*0.85); ctx.bezierCurveTo(W*0.1,H*0.3,W*0.9,H*0.7,W*0.9,H*0.15); }},
+  {label:"원",      draw:function(ctx,W,H){ ctx.arc(W/2,H/2,Math.min(W,H)*0.36,0,Math.PI*2); }},
+  {label:"나선",    draw:function(ctx,W,H){
+    var cx=W/2,cy=H/2,max=Math.min(W,H)*0.42,step=max/18;
+    ctx.moveTo(cx+step*0.5,cy);
+    for(var a=0;a<Math.PI*5.5;a+=0.08){
+      var r=step*0.5+step*(a/(Math.PI*2));
+      if(r>max) break;
+      ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
+    }
+  }},
+  {label:"파도",    draw:function(ctx,W,H){
+    var y=H/2;
+    ctx.moveTo(W*0.05,y);
+    for(var x=0;x<=1;x+=0.04){
+      ctx.lineTo(W*(0.05+x*0.9), y+Math.sin(x*Math.PI*4)*H*0.28);
+    }
+  }},
+];
+
+function StrokeCanvas(type){
+  this.type=type; this.strokes=[]; this.cur=null;
+  var wrap=document.createElement('div'); wrap.className='stroke-canvas-wrap';
+  var back=document.createElement('canvas'), front=document.createElement('canvas');
+  wrap.appendChild(back); wrap.appendChild(front);
+  var lbl=document.createElement('div'); lbl.className='stroke-label'; lbl.textContent=type.label; wrap.appendChild(lbl);
+  var er=document.createElement('button'); er.className='sc-erase'; er.textContent='⟲'; er.title='이 칸 지우기'; wrap.appendChild(er);
+  this.wrap=wrap; this.back=back; this.front=front;
+  var self=this;
+  er.addEventListener('click',function(e){ e.stopPropagation(); self.clear(); });
+  function norm(e){
+    var r=front.getBoundingClientRect();
+    return {x:Math.min(1,Math.max(0,(e.clientX-r.left)/r.width)),y:Math.min(1,Math.max(0,(e.clientY-r.top)/r.height)),p:(e.pointerType==='pen'&&e.pressure>0)?e.pressure:0.5};
+  }
+  front.addEventListener('pointerdown',function(e){
+    e.preventDefault(); front.setPointerCapture(e.pointerId);
+    self.cur={color:state.color,width:state.lineStrokeW||state.width,erase:state.tool==='erase',pts:[norm(e)]};
+    self.strokes.push(self.cur); strokeUndoStack.push(self); self.redrawFront();
+  });
+  front.addEventListener('pointermove',function(e){
+    if(!self.cur) return; e.preventDefault();
+    var ev=e.getCoalescedEvents?e.getCoalescedEvents():[e];
+    for(var i=0;i<ev.length;i++) self.cur.pts.push(norm(ev[i]));
+    self.redrawFront();
+  });
+  function end(){ if(!self.cur) return;
+    if(self.cur.pts.length===1){var p=self.cur.pts[0];self.cur.pts.push({x:p.x+.001,y:p.y+.001,p:p.p});}
+    self.cur=null; self.redrawFront();
+  }
+  front.addEventListener('pointerup',end); front.addEventListener('pointercancel',end);
+  front.addEventListener('pointerleave',function(){ if(self.cur) end(); });
+}
+StrokeCanvas.prototype.layout=function(){
+  var W=this.wrap.offsetWidth||400, H=120, r=dpr();
+  [this.back,this.front].forEach(function(c){
+    c.width=Math.round(W*r); c.height=Math.round(H*r);
+    c.style.width=W+'px'; c.style.height=H+'px';
+    c.getContext('2d').setTransform(r,0,0,r,0,0);
+  });
+  this.wrap.style.height=H+'px';
+  this.drawBack(); this.redrawFront();
+};
+StrokeCanvas.prototype.drawBack=function(){
+  var ctx=this.back.getContext('2d'),r=dpr();
+  var W=this.back.width/r, H=this.back.height/r;
+  ctx.clearRect(0,0,W,H);
+  if(state.showLineGuide){
+    ctx.save();
+    ctx.strokeStyle=getCss('--seal'); ctx.lineWidth=1.5; ctx.globalAlpha=0.18;
+    ctx.setLineDash([6,6]); ctx.lineCap='round';
+    ctx.beginPath();
+    this.type.draw(ctx,W,H);
+    ctx.stroke();
+    // 시작점 표시
+    ctx.setLineDash([]);
+    ctx.globalAlpha=0.32; ctx.fillStyle=getCss('--seal');
+    ctx.beginPath(); ctx.arc(this._startX(W,H),this._startY(W,H),5,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+};
+StrokeCanvas.prototype._startX=function(W){ return W*0.07; };
+StrokeCanvas.prototype._startY=function(W,H){ return H/2; };
+StrokeCanvas.prototype.redrawFront=function(){
+  var ctx=this.front.getContext('2d'),r=dpr();
+  var W=this.front.width/r, H=this.front.height/r;
+  ctx.clearRect(0,0,W,H); ctx.lineCap='round'; ctx.lineJoin='round';
+  for(var s=0;s<this.strokes.length;s++){
+    var st=this.strokes[s]; ctx.globalCompositeOperation=st.erase?'destination-out':'source-over';
+    ctx.strokeStyle=st.color;
+    var pts=st.pts; if(pts.length<2) continue;
+    for(var i=1;i<pts.length;i++){
+      var a=pts[i-1],b=pts[i],pr=(a.p+b.p)/2;
+      ctx.lineWidth=st.width*(st.erase?2.6:(0.6+0.8*pr));
+      ctx.beginPath(); ctx.moveTo(a.x*W,a.y*H);
+      ctx.quadraticCurveTo(a.x*W,a.y*H,(a.x+b.x)/2*W,(a.y+b.y)/2*H); ctx.lineTo(b.x*W,b.y*H); ctx.stroke();
+    }
+  }
+  ctx.globalCompositeOperation='source-over';
+};
+StrokeCanvas.prototype.clear=function(){
+  var self=this; this.strokes=[];
+  strokeUndoStack=strokeUndoStack.filter(function(c){return c!==self;});
+  this.redrawFront();
+};
+
+var lineMain=document.getElementById('line-main');
+function buildLineExercise(){
+  lineMain.innerHTML=''; strokeCanvases=[]; strokeUndoStack=[];
+  var rows=state.lineRows;
+  LINE_TYPES.forEach(function(type){
+    var sec=document.createElement('div'); sec.className='line-section';
+    var ttl=document.createElement('div'); ttl.className='line-section-title'; ttl.textContent=type.label; sec.appendChild(ttl);
+    for(var i=0;i<rows;i++){
+      var sc=new StrokeCanvas(type);
+      strokeCanvases.push(sc); sec.appendChild(sc.wrap);
+    }
+    lineMain.appendChild(sec);
+  });
+  requestAnimationFrame(function(){ strokeCanvases.forEach(function(c){ c.layout(); }); });
+}
+
+/* 선긋기 컨트롤 */
+document.getElementById('lineStrokeW').addEventListener('input',function(){ state.lineStrokeW=+this.value; });
+document.getElementById('lGuide').addEventListener('change',function(){ state.showLineGuide=this.checked; strokeCanvases.forEach(function(c){ c.drawBack(); }); });
+var lRowVal=document.getElementById('lRowVal');
+document.getElementById('lRowMinus').addEventListener('click',function(){ state.lineRows=Math.max(1,state.lineRows-1); lRowVal.textContent=state.lineRows; buildLineExercise(); });
+document.getElementById('lRowPlus').addEventListener('click',function(){ state.lineRows=Math.min(10,state.lineRows+1); lRowVal.textContent=state.lineRows; buildLineExercise(); });
+
+/* ══════════════ ▶ 필사 ══════════════ */
+function FisaLine(text, lineNum){
+  this.text=text; this.strokes=[]; this.cur=null;
+  var wrap=document.createElement('div'); wrap.className='fisa-line';
+
+  /* ① CSS 표본 글자 레이어 (폰트/레이아웃 독립적) */
+  var sample=document.createElement('div'); sample.className='fl-sample';
+  if(text) sample.textContent=text;
+  wrap.appendChild(sample);
+  this.sample=sample;
+
+  /* ② 필기 캔버스 (position:absolute, 표본 위에 겹침) */
+  var front=document.createElement('canvas');
+  wrap.appendChild(front);
+
+  var num=document.createElement('div'); num.className='fl-linenum'; num.textContent=lineNum+'줄'; wrap.appendChild(num);
+  var er=document.createElement('button'); er.className='fl-erase'; er.textContent='⟲'; er.title='이 줄 지우기'; wrap.appendChild(er);
+  this.wrap=wrap; this.front=front;
+  var self=this;
+  er.addEventListener('click',function(e){ e.stopPropagation(); self.clear(); });
+  function norm(e){
+    var r=front.getBoundingClientRect();
+    return {x:Math.min(1,Math.max(0,(e.clientX-r.left)/r.width)),y:Math.min(1,Math.max(0,(e.clientY-r.top)/r.height)),p:(e.pointerType==='pen'&&e.pressure>0)?e.pressure:0.5};
+  }
+  front.addEventListener('pointerdown',function(e){
+    e.preventDefault(); front.setPointerCapture(e.pointerId);
+    self.cur={color:state.color,width:state.width,erase:state.tool==='erase',pts:[norm(e)]};
+    self.strokes.push(self.cur); fisaUndoStack.push(self); self.redrawFront();
+  });
+  front.addEventListener('pointermove',function(e){
+    if(!self.cur) return; e.preventDefault();
+    var ev=e.getCoalescedEvents?e.getCoalescedEvents():[e];
+    for(var i=0;i<ev.length;i++) self.cur.pts.push(norm(ev[i]));
+    self.redrawFront();
+  });
+  function end(){ if(!self.cur) return;
+    if(self.cur.pts.length===1){var p=self.cur.pts[0];self.cur.pts.push({x:p.x+.001,y:p.y+.001,p:p.p});}
+    self.cur=null; self.redrawFront();
+  }
+  front.addEventListener('pointerup',end); front.addEventListener('pointercancel',end);
+  front.addEventListener('pointerleave',function(){ if(self.cur) end(); });
+}
+FisaLine.prototype.layout=function(){
+  var H=state.lineH;
+  /* 줄 높이 CSS 변수 반영 */
+  this.wrap.style.height=H+'px';
+  this.sample.style.height=H+'px';
+  this.sample.style.fontSize=state.fisaFontSize+'px';
+  /* 필기 캔버스: wrap과 동일 크기 (position:absolute) */
+  var W=this.wrap.offsetWidth||document.getElementById('fisa-main').offsetWidth||window.innerWidth-28;
+  var r=dpr();
+  var c=this.front;
+  c.width=Math.round(W*r); c.height=Math.round(H*r);
+  c.style.width=W+'px'; c.style.height=H+'px';
+  c.getContext('2d').setTransform(r,0,0,r,0,0);
+  this.drawGuideLines();
+  this.redrawFront();
+};
+FisaLine.prototype.drawGuideLines=function(){
+  /* 베이스라인·상단선을 필기 캔버스 위에 그림 */
+  var ctx=this.front.getContext('2d'),r=dpr();
+  var W=this.front.width/r, H=this.front.height/r;
+  ctx.save(); ctx.strokeStyle=getCss('--guide'); ctx.lineWidth=1; ctx.setLineDash([4,8]);
+  ctx.beginPath(); ctx.moveTo(12,H-16); ctx.lineTo(W-12,H-16);
+  ctx.moveTo(12,10); ctx.lineTo(W-12,10); ctx.stroke(); ctx.restore();
+};
+FisaLine.prototype.redrawFront=function(){
+  var ctx=this.front.getContext('2d'),r=dpr();
+  var W=this.front.width/r, H=this.front.height/r;
+  ctx.clearRect(0,0,W,H);
+  /* 가이드선 재렌더 */
+  ctx.save(); ctx.strokeStyle=getCss('--guide'); ctx.lineWidth=1; ctx.setLineDash([4,8]);
+  ctx.beginPath(); ctx.moveTo(12,H-16); ctx.lineTo(W-12,H-16);
+  ctx.moveTo(12,10); ctx.lineTo(W-12,10); ctx.stroke(); ctx.restore();
+  /* 필기 획 */
+  ctx.lineCap='round'; ctx.lineJoin='round';
+  for(var s=0;s<this.strokes.length;s++){
+    var st=this.strokes[s]; ctx.globalCompositeOperation=st.erase?'destination-out':'source-over';
+    ctx.strokeStyle=st.color;
+    var pts=st.pts; if(pts.length<2) continue;
+    for(var i=1;i<pts.length;i++){
+      var a=pts[i-1],b=pts[i],pr=(a.p+b.p)/2;
+      ctx.lineWidth=st.width*(st.erase?2.6:(0.55+0.9*pr));
+      ctx.beginPath(); ctx.moveTo(a.x*W,a.y*H);
+      ctx.quadraticCurveTo(a.x*W,a.y*H,(a.x+b.x)/2*W,(a.y+b.y)/2*H); ctx.lineTo(b.x*W,b.y*H); ctx.stroke();
+    }
+  }
+  ctx.globalCompositeOperation='source-over';
+};
+FisaLine.prototype.clear=function(){
+  var self=this; this.strokes=[];
+  fisaUndoStack=fisaUndoStack.filter(function(c){return c!==self;});
+  this.redrawFront();
+};
+
+var fisaLinesEl=document.getElementById('fisa-lines');
+var fisaQuoteEl=document.getElementById('fisa-quote-area');
+var FISA_EXTRA=3;
+
+function splitByPixelWidth(text){
+  var tmpC=document.createElement('canvas'), tmpCtx=tmpC.getContext('2d');
+  tmpCtx.font='bold '+state.fisaFontSize+'px '+"'Noto Serif KR',serif";
+  var mainW=(document.getElementById('fisa-main').offsetWidth||window.innerWidth)-28;
+  var maxW=mainW-40;
+  var chars=Array.from(text), lines=[], cur='';
+  var breakAfter=new Set(['.',',','!','?','。','，','！','？','…',';','·']);
+  var i=0;
+  while(i<chars.length){
+    var ch=chars[i], test=cur+ch, w=tmpCtx.measureText(test).width;
+    if(w<=maxW){
+      cur=test;
+      if(breakAfter.has(ch) && i<chars.length-1){
+        var nextW=tmpCtx.measureText(cur+(chars[i+1]||'')).width;
+        if(nextW>maxW*0.72 || chars[i+1]===' '){ lines.push(cur.trim()); cur=''; i++; continue; }
+      }
+      i++;
+    } else {
+      if(cur===''){cur=ch;i++;}
+      var saved=cur, sarr=Array.from(saved), breakPos=-1;
+      for(var k=sarr.length-1;k>=Math.floor(sarr.length*0.5);k--){
+        if(breakAfter.has(sarr[k])){ breakPos=k; break; }
+      }
+      if(breakPos>=0 && breakPos<sarr.length-1){
+        lines.push(sarr.slice(0,breakPos+1).join('').trim());
+        cur=sarr.slice(breakPos+1).join('').trimStart();
+      } else { lines.push(cur.trim()); cur=''; }
+    }
+  }
+  if(cur.trim()) lines.push(cur.trim());
+  if(lines.length>=2){
+    var last=lines[lines.length-1];
+    if(Array.from(last).length<=3){ lines[lines.length-2]+=' '+last; lines.pop(); }
+  }
+  return lines;
+}
+
+function addFisaLine(text,num){
+  var fl=new FisaLine(text,num);
+  if(!state.fisaShowGuide) fl.wrap.classList.add('guide-off');
+  fisaLines.push(fl); fisaLinesEl.appendChild(fl.wrap);
+}
+function addFisaStanza(num){
+  var div=document.createElement('div');
+  div.style.cssText='height:18px;margin-bottom:6px;border-bottom:1px dashed var(--paper-edge);';
+  fisaLinesEl.appendChild(div);
+}
+
+var curQuoteIdx=0;
+function navQuote(dir){
+  if(dir===0){ curQuoteIdx=Math.floor(Math.random()*QUOTES.length); }
+  else { curQuoteIdx=(curQuoteIdx+dir+QUOTES.length)%QUOTES.length; }
+  buildFisa(QUOTES[curQuoteIdx]);
+}
+
+function buildFisa(quote){
+  state.fisaQuote=quote||state.fisaQuote;
+  fisaLinesEl.innerHTML=''; fisaLines=[]; fisaUndoStack=[];
+  fisaQuoteEl.innerHTML='';
+  if(!state.fisaQuote) return;
+  var q=state.fisaQuote, isPoem=!!q.poem;
+  var card=document.createElement('div'); card.className='fisa-quote-card';
+  /* 시는 전체 텍스트를 카드에 표시, 명언은 그대로 */
+  var cardText = isPoem ? q.text : q.text;
+  card.innerHTML='<div class="fq-label">'+(isPoem?'✦ 시 필사':'✦ 필사 문장')+'</div>'
+    +'<div class="fq-text" style="'+(isPoem?'white-space:pre-line;font-size:15px;line-height:1.9;':'')+'">'+escHtml(cardText)+'</div>'
+    +'<div class="fq-source">— '+escHtml(q.src||'')+'</div>'
+    +'<div class="fq-nav">'
+    +'<button class="btn" id="prevQuote">← 이전</button>'
+    +'<button class="btn primary" id="nextQuote">다음 →</button>'
+    +'<button class="btn ghost" id="randQuote">🎲 랜덤</button>'
+    +'</div>';
+  fisaQuoteEl.appendChild(card);
+  document.getElementById('prevQuote').addEventListener('click',navQuote.bind(null,-1));
+  document.getElementById('nextQuote').addEventListener('click',navQuote.bind(null,1));
+  document.getElementById('randQuote').addEventListener('click',navQuote.bind(null,0));
+  if(isPoem){
+    var rawLines=q.text.split('\n'), lineNum=0;
+    for(var ri=0;ri<rawLines.length;ri++){
+      var rline=rawLines[ri].trim();
+      if(rline===''){ addFisaStanza(++lineNum); }
+      else { addFisaLine(rline,++lineNum); addFisaLine('',lineNum); }
+    }
+  } else {
+    var chunks=splitByPixelWidth(q.text);
+    for(var li=0;li<chunks.length;li++){ addFisaLine(chunks[li],li+1); addFisaLine('',li+1); }
+  }
+  for(var ei=0;ei<FISA_EXTRA;ei++) addFisaLine('',fisaLines.length+ei+1);
+  /* setTimeout 0: 현재 패널이 display:none이어도 다음 틱에 layout 호출.
+     패널이 보이는 상태라면 offsetWidth가 이미 확정되어 있음. */
+  setTimeout(function(){
+    fisaLines.forEach(function(l){ l.layout(); });
+  }, 0);
+}
+
+document.getElementById('fGuide').addEventListener('change',function(){
+  state.fisaShowGuide=this.checked;
+  fisaLines.forEach(function(l){
+    l.wrap.classList.toggle('guide-off', !state.fisaShowGuide);
+  });
+});
+document.getElementById('fontsize').addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b) return;
+  this.querySelectorAll('button').forEach(function(x){x.classList.remove('sel');}); b.classList.add('sel');
+  state.fisaFontSize=+b.dataset.f;
+  document.documentElement.style.setProperty('--fisa-fs', state.fisaFontSize+'px');
+  /* 재빌드 없이 CSS만 업데이트 */
+  fisaLines.forEach(function(l){ l.sample.style.fontSize=state.fisaFontSize+'px'; });
+});
+document.getElementById('linesize').addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b) return;
+  this.querySelectorAll('button').forEach(function(x){x.classList.remove('sel');}); b.classList.add('sel');
+  state.lineH=+b.dataset.h;
+  document.documentElement.style.setProperty('--lh', state.lineH+'px');
+  fisaLines.forEach(function(l){
+    l.wrap.style.height=state.lineH+'px';
+    l.sample.style.height=state.lineH+'px';
+    l.layout();
+  });
+});
+
+/* 명언 모달 */
+var modal=document.getElementById('quoteModal'), quoteList=document.getElementById('quoteList'), selIdx=0;
+function renderQuoteList(filter){
+  quoteList.innerHTML='';
+  var cats={};
+  QUOTES.forEach(function(q,i){
+    if(filter && q.text.indexOf(filter)<0 && q.src.indexOf(filter)<0 && q.cat.indexOf(filter)<0) return;
+    if(!cats[q.cat]) cats[q.cat]=[];
+    cats[q.cat].push({q:q,i:i});
+  });
+  Object.keys(cats).forEach(function(cat){
+    var ch=document.createElement('div'); ch.className='modal-cat'; ch.textContent=cat; quoteList.appendChild(ch);
+    cats[cat].forEach(function(pair){
+      var item=document.createElement('div'); item.className='modal-item'+(pair.i===selIdx?' sel':'');
+      var previewText=pair.q.poem ? pair.q.text.replace(/\n/g,' ').substring(0,50)+'…' : pair.q.text;
+      item.innerHTML='<span class="mi-text">'+escHtml(previewText)+'</span><span class="mi-src">— '+escHtml(pair.q.src)+'</span>';
+      item.addEventListener('click',function(){
+        curQuoteIdx=pair.i; selIdx=pair.i; buildFisa(QUOTES[pair.i]); modal.classList.add('hidden');
+        if(curTab!=='fisa') document.querySelector('.tab[data-tab="fisa"]').click();
+      });
+      quoteList.appendChild(item);
+    });
+  });
+}
+document.getElementById('btnQuoteLib').addEventListener('click',function(){ modal.classList.remove('hidden'); renderQuoteList(''); });
+document.getElementById('closeModal').addEventListener('click',function(){ modal.classList.add('hidden'); });
+modal.addEventListener('click',function(e){ if(e.target===modal) modal.classList.add('hidden'); });
+document.getElementById('quoteSearch').addEventListener('input',function(){ renderQuoteList(this.value.trim()); });
+document.getElementById('btnFisaApply').addEventListener('click',function(){
+  var txt=document.getElementById('fisaCustomText').value.trim();
+  var src=document.getElementById('fisaCustomSrc').value.trim();
+  if(!txt) return; buildFisa({text:txt,src:src||'직접 입력'});
+});
+
+/* ── 되돌리기 / 전체지우기 ── */
+document.getElementById('undo').addEventListener('click',function(){
+  if(curTab==='char'){ var c=undoStack.pop(); if(!c) return; c.strokes.pop(); c.redrawFront(); }
+  else if(curTab==='line'){ var s=strokeUndoStack.pop(); if(!s) return; s.strokes.pop(); s.redrawFront(); }
+  else { var l=fisaUndoStack.pop(); if(!l) return; l.strokes.pop(); l.redrawFront(); }
+});
+document.getElementById('clear').addEventListener('click',function(){
+  if(curTab==='char'){ cells.forEach(function(c){ c.strokes=[]; c.redrawFront(); }); undoStack=[]; }
+  else if(curTab==='line'){ strokeCanvases.forEach(function(c){ c.strokes=[]; c.redrawFront(); }); strokeUndoStack=[]; }
+  else { fisaLines.forEach(function(l){ l.strokes=[]; l.redrawFront(); }); fisaUndoStack=[]; }
+});
+
+/* 리사이즈 */
+var rt;
+window.addEventListener('resize',function(){
+  clearTimeout(rt); rt=setTimeout(function(){
+    cells.forEach(function(c){ c.layout(); });
+    strokeCanvases.forEach(function(c){ c.layout(); });
+    if(state.fisaQuote) buildFisa(null);
+    else setTimeout(function(){ fisaLines.forEach(function(l){ l.layout(); }); }, 0);
+  },200);
+});
+
+/* 폰트 로딩 후 재렌더 */
+if(document.fonts&&document.fonts.ready){
+  document.fonts.ready.then(function(){ cells.forEach(function(c){ c.drawBack(); }); fisaLines.forEach(function(l){ l.redrawFront(); }); });
+}
+
+/* 다운로드 */
+document.getElementById('download').addEventListener('click',function(){
+  var html=document.documentElement.outerHTML;
+  var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='index.html';
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); },1000);
+});
+
+/* 초기화 */
+document.documentElement.style.setProperty('--cell',state.cell+'px');
+buildPresetPanel();
+buildChar();
+
+})();
+</script>
+
+
+</body></html>
